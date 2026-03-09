@@ -5,10 +5,14 @@ import {
   updateNotice,
   deleteNotice,
 } from '../controllers/noticeController.js';
+import { authorizeRoles, protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.route('/').post(createNotice).get(getNotices);
-router.route('/:id').put(updateNotice).delete(deleteNotice);
+router.route('/').get(protect, getNotices).post(protect, authorizeRoles('teacher', 'admin'), createNotice);
+router
+  .route('/:id')
+  .put(protect, authorizeRoles('teacher', 'admin'), updateNotice)
+  .delete(protect, authorizeRoles('teacher', 'admin'), deleteNotice);
 
 export default router;
