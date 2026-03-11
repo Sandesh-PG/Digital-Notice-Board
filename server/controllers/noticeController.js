@@ -3,7 +3,10 @@ import Notice from '../models/Notice.js';
 
 export const createNotice = async (req, res) => {
 	try {
-		const notice = await Notice.create(req.body);
+		const notice = await Notice.create({
+			...req.body,
+			author: req.user.id
+		});
 
 		return res.status(201).json({
 			success: true,
@@ -21,7 +24,9 @@ export const createNotice = async (req, res) => {
 
 export const getNotices = async (req, res) => {
 	try {
-		const notices = await Notice.find().sort({ pinned: -1, createdAt: -1 });
+		const notices = await Notice.find()
+			.populate('author', 'name role')
+			.sort({ pinned: -1, createdAt: -1 });
 
 		return res.status(200).json({
 			success: true,

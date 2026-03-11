@@ -1,6 +1,6 @@
+import { Outlet } from "react-router-dom";
 import Sidebar from "../components/sideBar";
 import Navbar from "../components/Navbar";
-import Home from "./Home";
 
 function Dashboard() {
   return (
@@ -10,7 +10,7 @@ function Dashboard() {
         <div className="flex-1 bg-transparent">
           <Navbar />
           <div className="p-4 sm:p-6 lg:p-8">
-            <Home />
+            <Outlet />
           </div>
         </div>
       </div>

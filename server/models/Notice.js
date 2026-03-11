@@ -10,6 +10,11 @@ const noticeSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Description is required']
   },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   category: {
     type: String,
     enum: ['academic', 'events', 'general'],
