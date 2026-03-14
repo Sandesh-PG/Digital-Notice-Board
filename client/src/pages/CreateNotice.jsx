@@ -7,7 +7,7 @@ function CreateNotice() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    category: "academic",
+    category: "announcement",
     pinned: false,
     expiryDate: "",
   });
@@ -44,7 +44,7 @@ function CreateNotice() {
       setFormData({
         title: "",
         description: "",
-        category: "academic",
+        category: "announcement",
         pinned: false,
         expiryDate: "",
       });
@@ -119,11 +119,10 @@ function CreateNotice() {
               required
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
             >
-              <option value="academic">Academic</option>
-              <option value="placements">Placements</option>
-              <option value="events">Events</option>
-              <option value="timetable">Timetable</option>
-              <option value="holidays">Holidays</option>
+              <option value="announcement">Announcements</option>
+              <option value="timetable">Timetables</option>
+              <option value="placement">Placements</option>
+              <option value="event">Events</option>
             </select>
           </div>
 
@@ -182,7 +181,7 @@ function CreateNotice() {
                 setFormData({
                   title: "",
                   description: "",
-                  category: "academic",
+                  category: "announcement",
                   pinned: false,
                   expiryDate: "",
                 });

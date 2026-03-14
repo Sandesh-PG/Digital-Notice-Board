@@ -14,4 +14,19 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+export const getNotices = ({ category, search, startDate, endDate, page, limit } = {}) => {
+  const params = {
+    category,
+    search,
+    startDate,
+    endDate,
+    page,
+    limit,
+  };
+
+  return api.get('/notices', {
+    params: Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== '')),
+  });
+};
+
 export default api;

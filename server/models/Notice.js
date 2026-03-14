@@ -17,7 +17,7 @@ const noticeSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['academic', 'events', 'general'],
+    enum: ['announcement', 'timetable', 'placement', 'event'],
     required: [true, 'Category is required']
   },
   pinned: {

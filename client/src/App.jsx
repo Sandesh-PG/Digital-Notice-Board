@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateNotice from "./pages/CreateNotice";
+import SettingsPage from "./pages/Settings";
+import CreateTimetable from "./pages/CreateTimetable";
 
 function App() {
   return (
@@ -21,7 +23,24 @@ function App() {
       >
         <Route index element={<Home />} />
         <Route path="create-notice" element={<CreateNotice />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route
+          path="create-timetable"
+          element={
+            <ProtectedRoute allowedRoles={["teacher", "admin"]}>
+              <CreateTimetable />
+            </ProtectedRoute>
+          }
+        />
       </Route>
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Navigate to="/dashboard/settings" replace />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/create-notice"
         element={

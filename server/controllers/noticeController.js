@@ -24,13 +24,42 @@ export const createNotice = async (req, res) => {
 
 export const getNotices = async (req, res) => {
 	try {
-		const notices = await Notice.find()
+		const { category, search, startDate, endDate, page = 1, limit = 10 } = req.query;
+		const currentPage = Math.max(Number.parseInt(page, 10) || 1, 1);
+		const pageSize = Math.max(Number.parseInt(limit, 10) || 10, 1);
+		const skip = (currentPage - 1) * pageSize;
+		const filter = category ? { category } : {};
+
+		if (search) {
+			filter.$or = [
+				{ title: { $regex: search, $options: 'i' } },
+				{ description: { $regex: search, $options: 'i' } },
+			];
+		}
+
+		if (startDate || endDate) {
+			filter.createdAt = {};
+
+			if (startDate) {
+				filter.createdAt.$gte = new Date(startDate);
+			}
+
+			if (endDate) {
+				filter.createdAt.$lte = new Date(endDate);
+			}
+		}
+
+		const notices = await Notice.find(filter)
 			.populate('author', 'name role')
-			.sort({ pinned: -1, createdAt: -1 });
+			.sort({ createdAt: -1 })
+			.skip(skip)
+			.limit(pageSize);
 
 		return res.status(200).json({
 			success: true,
 			count: notices.length,
+			page: currentPage,
+			limit: pageSize,
 			data: notices,
 		});
 	} catch (error) {
