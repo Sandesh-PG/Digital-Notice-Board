@@ -24,8 +24,8 @@ function Dashboard() {
           isSidebarOpen ? "md:ml-64" : "ml-0 md:ml-14"
         }`}
       >
-        <div className="min-h-screen border border-white/40 bg-white/55 shadow-[0_20px_80px_-35px_rgba(15,23,42,0.45)] backdrop-blur-md">
-          <Navbar isSidebarOpen={isSidebarOpen} />
+        <div className="min-h-screen bg-white">
+          <Navbar isSidebarOpen={isSidebarOpen} selectedCategory={selectedCategory} />
           <div className="p-4 sm:p-6 lg:p-8">
             <Outlet context={{ selectedCategory }} />
           </div>
@@ -45,8 +45,8 @@ export default Dashboard;
 // function Dashboard() {
 //   const [selectedCategory, setSelectedCategory] = useState("");
 //   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
-//     if (globalThis.window === undefined) return false;
-//     return globalThis.window.innerWidth >= 768;
+//     if (typeof window === "undefined") return false;
+//     return window.innerWidth >= 768;
 //   });
 
 //   return (
@@ -64,7 +64,7 @@ export default Dashboard;
 //         }`}
 //       >
 //         <div className="min-h-screen border border-white/40 bg-white/55 shadow-[0_20px_80px_-35px_rgba(15,23,42,0.45)] backdrop-blur-md">
-//           <Navbar />
+//           <Navbar isSidebarOpen={isSidebarOpen} />
 //           <div className="p-4 sm:p-6 lg:p-8">
 //             <Outlet context={{ selectedCategory }} />
 //           </div>

@@ -18,7 +18,7 @@ router
 router
   .route('/:id')
   .get(protect, getTimetableById)
-  .put(protect, updateTimetable)
-  .delete(protect, authorizeRoles('admin'), deleteTimetable);
+  .put(protect, authorizeRoles('teacher', 'admin'), updateTimetable)
+  .delete(protect, authorizeRoles('teacher', 'admin'), deleteTimetable);
 
 export default router;

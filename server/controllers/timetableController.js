@@ -147,29 +147,19 @@ export const getTimetableById = async (req, res) => {
 
 export const updateTimetable = async (req, res) => {
 	try {
+		if (!req.user || !['teacher', 'admin'].includes(req.user.role)) {
+			return res.status(403).json({
+				success: false,
+				message: 'Only teachers and admins can update timetables',
+			});
+		}
+
 		const timetable = await Timetable.findById(req.params.id);
 
 		if (!timetable) {
 			return res.status(404).json({
 				success: false,
 				message: 'Timetable not found',
-			});
-		}
-
-		if (!req.user) {
-			return res.status(401).json({
-				success: false,
-				message: 'Not authorized',
-			});
-		}
-
-		const isCreator = timetable.createdBy?.toString() === req.user._id.toString();
-		const isAdmin = req.user.role === 'admin';
-
-		if (!isCreator && !isAdmin) {
-			return res.status(403).json({
-				success: false,
-				message: 'Only the creator or an admin can update this timetable',
 			});
 		}
 
@@ -202,10 +192,10 @@ export const updateTimetable = async (req, res) => {
 
 export const deleteTimetable = async (req, res) => {
 	try {
-		if (req.user?.role !== 'admin') {
+		if (!req.user || !['teacher', 'admin'].includes(req.user.role)) {
 			return res.status(403).json({
 				success: false,
-				message: 'Only admins can delete timetables',
+				message: 'Only teachers and admins can delete timetables',
 			});
 		}
 

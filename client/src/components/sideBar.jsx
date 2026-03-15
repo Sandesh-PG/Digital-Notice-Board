@@ -7,11 +7,11 @@ import {
 import PropTypes from "prop-types";
 
 const navItems = [
-  { label: "Dashboard",     icon: Home,         category: "",             path: "/dashboard" },
-  { label: "Announcements", icon: Megaphone,     category: "announcement", path: null },
-  { label: "Timetables",    icon: Calendar,      category: "timetable",    path: "/dashboard/create-timetable" },
-  { label: "Placements",    icon: Briefcase,     category: "placement",    path: null },
-  { label: "Events",        icon: PartyPopper,   category: "event",        path: null },
+  { label: "Dashboard",     icon: Home,       category: "",             path: "/dashboard",                teacherPath: null, studentPath: null },
+  { label: "Announcements", icon: Megaphone,  category: "announcement", path: null,                        teacherPath: null, studentPath: null },
+  { label: "Timetables",    icon: Calendar,   category: "timetable",    path: null,                        teacherPath: "/dashboard/create-timetable", studentPath: "/dashboard/timetables" },
+  { label: "Placements",    icon: Briefcase,  category: "placement",    path: null,                        teacherPath: null, studentPath: null },
+  { label: "Events",        icon: PartyPopper,category: "event",        path: null,                        teacherPath: null, studentPath: null },
 ];
 
 function Sidebar({ selectedCategory, onCategorySelect, isSidebarOpen, setIsSidebarOpen }) {
@@ -25,11 +25,20 @@ function Sidebar({ selectedCategory, onCategorySelect, isSidebarOpen, setIsSideb
   });
 
   const avatarInitial = user?.name?.charAt(0)?.toUpperCase() || "U";
+  const isTeacherOrAdmin = user?.role === "teacher" || user?.role === "admin";
+
+  const getItemPath = (item) => {
+    if (item.teacherPath || item.studentPath) {
+      return isTeacherOrAdmin ? item.teacherPath : item.studentPath;
+    }
+    return item.path;
+  };
 
   const handleNavItemClick = (item) => {
-    if (item.path) {
-      onCategorySelect(""); // reset category when navigating to a path-based route
-      navigate(item.path);
+    const resolvedPath = getItemPath(item);
+    if (resolvedPath) {
+      onCategorySelect("");
+      navigate(resolvedPath);
     } else {
       onCategorySelect(item.category);
       navigate("/dashboard");
@@ -69,7 +78,7 @@ function Sidebar({ selectedCategory, onCategorySelect, isSidebarOpen, setIsSideb
         </div>
       )}
 
-      {/* ── Mobile: hamburger button (always visible, top-left) ── */}
+      {/* ── Mobile: hamburger button ── */}
       {!isSidebarOpen && (
         <button
           type="button"
@@ -89,7 +98,7 @@ function Sidebar({ selectedCategory, onCategorySelect, isSidebarOpen, setIsSideb
       >
         {/* Header */}
         <div className="shrink-0 px-3 pt-4">
-          <div className="rounded-2xl border border-emerald-300/20 bg-linear-to-r from-emerald-400/15 via-cyan-300/10 to-transparent px-3 py-3">
+          <div className="rounded-2xl border border-emerald-300/20 bg-gradient-to-r from-emerald-400/15 via-cyan-300/10 to-transparent px-3 py-3">
             <div className="flex items-center justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-xs font-medium uppercase tracking-[0.22em] text-emerald-200/80">RIT Hub</p>
@@ -112,9 +121,11 @@ function Sidebar({ selectedCategory, onCategorySelect, isSidebarOpen, setIsSideb
           <div className="grid grid-cols-1 gap-1.5">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const resolvedPath = getItemPath(item);
+
               let isActive = false;
-              if (item.path && item.path !== "/dashboard") {
-                isActive = location.pathname === item.path;
+              if (resolvedPath && resolvedPath !== "/dashboard") {
+                isActive = location.pathname === resolvedPath;
               } else if (item.label === "Dashboard") {
                 isActive = location.pathname === "/dashboard" && selectedCategory === "";
               } else {
@@ -154,7 +165,7 @@ function Sidebar({ selectedCategory, onCategorySelect, isSidebarOpen, setIsSideb
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* User + Settings */}
+        {/* User + Settings + Logout */}
         <div className="shrink-0 px-3 pb-4">
           <div className="rounded-xl border border-slate-700/70 bg-slate-800/60 p-3">
             <div className="flex items-center gap-3">
@@ -174,7 +185,6 @@ function Sidebar({ selectedCategory, onCategorySelect, isSidebarOpen, setIsSideb
               <Settings size={14} />
               <span>Settings</span>
             </Link>
-
             <button
               type="button"
               onClick={handleLogout}
